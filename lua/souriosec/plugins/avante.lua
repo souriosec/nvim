@@ -4,9 +4,13 @@ return {
 	lazy = false,
 	version = false, -- set this to "*" if you want to always pull the latest change, false to update on release
 	opts = {
-		provider = "openai",
-		openai = {
-			model = "gpt-4o-mini",
+		-- provider = "openai",
+		-- claude = {
+		-- 	model = "o1-mini-2024-09-12",
+		-- },
+		provider = "claude",
+		claude = {
+			model = "claude-3-5-sonnet-20241022",
 		},
 	},
 	-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

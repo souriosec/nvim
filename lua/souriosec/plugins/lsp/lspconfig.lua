@@ -93,6 +93,13 @@ return {
 			["pyright"] = function()
 				lspconfig["pyright"].setup({
 					capabilities = capabilities,
+					settings = {
+						python = {
+							venvPath = "./",
+							venv = ".venv",
+							pythonPath = "./.venv/bin/python",
+						},
+					},
 				})
 			end,
 			["graphql"] = function()
