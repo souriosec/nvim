@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
@@ -6,6 +7,7 @@ return {
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
 	},
+
 	config = function()
 		-- import lspconfig plugin
 		local lspconfig = require("lspconfig")
