@@ -6,6 +6,7 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
+		"williamboman/mason-lspconfig.nvim",
 	},
 
 	config = function()
@@ -79,62 +80,67 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["clangd"] = function()
-				lspconfig["clangd"].setup({
-					capabilities = capabilities,
-					filetypes = { "c", "cpp" },
-				})
-			end,
-			["pyright"] = function()
-				lspconfig["pyright"].setup({
-					capabilities = capabilities,
-					settings = {
-						python = {
-							venvPath = "./",
-							venv = ".venv",
-							pythonPath = "./.venv/bin/python",
-						},
-					},
-				})
-			end,
-			["graphql"] = function()
-				-- configure graphql language server
-				lspconfig["graphql"].setup({
-					capabilities = capabilities,
-					filetypes = { "graphql", "gql", "typescriptreact", "javascriptreact" },
-				})
-			end,
-			["emmet_ls"] = function()
-				-- configure emmet language server
-				lspconfig["emmet_ls"].setup({
-					capabilities = capabilities,
-					filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-				})
-			end,
-			["lua_ls"] = function()
-				-- configure lua server (with special settings)
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							-- make the language server recognize "vim" global
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
+		-- check if mason-lspconfig is available first
+		local mason_lspconfig_ok = pcall(require, "mason_lspconfig")
+
+		if mason_lspconfig_ok then
+			mason_lspconfig.setup_handlers({
+				-- default handler for installed servers
+				function(server_name)
+					lspconfig[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+				["clangd"] = function()
+					lspconfig["clangd"].setup({
+						capabilities = capabilities,
+						filetypes = { "c", "cpp" },
+					})
+				end,
+				["pyright"] = function()
+					lspconfig["pyright"].setup({
+						capabilities = capabilities,
+						settings = {
+							python = {
+								venvPath = "./",
+								venv = ".venv",
+								pythonPath = "./.venv/bin/python",
 							},
 						},
-					},
-				})
-			end,
-		})
+					})
+				end,
+				-- ["graphql"] = function()
+				-- 	-- configure graphql language server
+				-- 	lspconfig["graphql"].setup({
+				-- 		capabilities = capabilities,
+				-- 		filetypes = { "graphql", "gql", "typescriptreact", "javascriptreact" },
+				-- 	})
+				-- end,
+				["emmet_ls"] = function()
+					-- configure emmet language server
+					lspconfig["emmet_ls"].setup({
+						capabilities = capabilities,
+						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
+					})
+				end,
+				["lua_ls"] = function()
+					-- configure lua server (with special settings)
+					lspconfig["lua_ls"].setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								-- make the language server recognize "vim" global
+								diagnostics = {
+									globals = { "vim" },
+								},
+								completion = {
+									callSnippet = "Replace",
+								},
+							},
+						},
+					})
+				end,
+			})
+		end
 	end,
 }
