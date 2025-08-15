@@ -1,10 +1,23 @@
 return {
 	"saghen/blink.cmp",
-	dependencies = { "rafamadriz/friendly-snippets", "fang2hou/blink-copilot" },
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+		"fang2hou/blink-copilot",
+	},
 
 	version = "1.*",
 
 	opts = {
+		completion = {
+			menu = { border = "single" },
+			documentation = {
+				auto_show = true, -- Automatically show documentation
+				auto_show_delay_ms = 100, -- Delay before showing
+				window = {
+					border = "single", -- or "single", "double", "none"
+				},
+			},
+		},
 		sources = {
 			default = { "lsp", "buffer", "snippets", "path", "copilot" },
 			providers = {
