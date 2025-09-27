@@ -1,7 +1,7 @@
 vim.cmd("let g:netrw_liststyle = 3")
 
 local opt = vim.opt
-
+opt.winborder = "single" -- window border style
 opt.relativenumber = true -- show relative line numbers
 opt.number = true -- show absolute line number on cursor line
 opt.tabstop = 2 -- 2 spaces for tabs
