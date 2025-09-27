@@ -20,4 +20,4 @@ opt.clipboard:append("unnamedplus") -- use system clipboard
 opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontal window to the bottom
 opt.swapfile = false -- turn of swap file
-opt.scrolloff = 12
+opt.scrolloff = 12 -- scroll offset
