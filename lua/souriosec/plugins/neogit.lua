@@ -8,7 +8,6 @@ return {
 		local neogit = require("neogit")
 		neogit.setup({})
 
-		-- set keymaps
 		local keymap = vim.keymap
 		keymap.set("n", "<leader>gg", "<cmd>Neogit<CR>", { desc = "Open Neogit" })
 	end,
