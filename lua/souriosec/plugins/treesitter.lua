@@ -23,6 +23,7 @@ return {
 				"c",
 				"cpp",
 				"rust",
+				"python",
 				"ron",
 				"go",
 				"bash",
