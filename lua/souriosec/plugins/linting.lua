@@ -14,8 +14,22 @@ return {
 			python = { "ruff" },
 		}
 
+		-- Use full path to eslint_d
+		eslint.cmd = vim.fn.expand("$HOME/.npm-global/bin/eslint_d")
+
+		-- Set the working directory to the LSP root (where package.json/eslint config lives)
+		eslint.cwd = function()
+			local clients = vim.lsp.get_clients({ bufnr = 0 })
+			for _, client in ipairs(clients) do
+				if client.name == "ts_ls" and client.config.root_dir then
+					return client.config.root_dir
+				end
+			end
+			return vim.fn.expand("%:p:h")
+		end
+
 		eslint.args = {
-			"--no-warn-ignored", -- <-- this is the key argument
+			"--no-warn-ignored",
 			"--format",
 			"json",
 			"--stdin",
