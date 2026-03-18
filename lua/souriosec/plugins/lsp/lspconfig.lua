@@ -18,6 +18,13 @@ return {
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
+
+				-- Enable semantic tokens highlighting
+				if client and client.server_capabilities and client.server_capabilities.semanticTokensProvider then
+					vim.lsp.semantic_tokens.start(ev.buf, client.id)
+				end
+
 				local opts = { buffer = ev.buf, silent = true }
 
 				opts.desc = "Show workspace symbols"
@@ -71,11 +78,33 @@ return {
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
 		-- Change the Diagnostic symbols in the sign column (gutter)
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		local signs = { Error = "", Warn = "", Hint = "󰠠 ", Info = "" }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
+
+		-- Configure LSP semantic token highlight groups for better syntax highlighting
+		vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.enum", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.interface", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.struct", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.typeParameter", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.function", { link = "Function" })
+		vim.api.nvim_set_hl(0, "@lsp.type.method", { link = "Function" })
+		vim.api.nvim_set_hl(0, "@lsp.type.namespace", { link = "Type" })
+		vim.api.nvim_set_hl(0, "@lsp.type.parameter", { link = "Identifier" })
+		vim.api.nvim_set_hl(0, "@lsp.type.property", { link = "Identifier" })
+		vim.api.nvim_set_hl(0, "@lsp.type.variable", {})
+		vim.api.nvim_set_hl(0, "@lsp.type.enumMember", { link = "Constant" })
+		vim.api.nvim_set_hl(0, "@lsp.type.decorator", { link = "Function" })
+		vim.api.nvim_set_hl(0, "@lsp.type.macro", { link = "Macro" })
+		vim.api.nvim_set_hl(0, "@lsp.type.comment", { link = "Comment" })
+		vim.api.nvim_set_hl(0, "@lsp.type.string", { link = "String" })
+		vim.api.nvim_set_hl(0, "@lsp.type.keyword", { link = "Keyword" })
+		vim.api.nvim_set_hl(0, "@lsp.type.number", { link = "Number" })
+		vim.api.nvim_set_hl(0, "@lsp.type.operator", { link = "Operator" })
 
 		-- check if mason-lspconfig is available first
 		local mason_lspconfig_ok = pcall(require, "mason_lspconfig")
@@ -97,6 +126,10 @@ return {
 					lspconfig["clangd"].setup({
 						capabilities = capabilities,
 						filetypes = { "c", "cpp" },
+						cmd = {
+							"clangd",
+							"--compile-commands-dir=build",
+						},
 					})
 				end,
 				["pyright"] = function()
@@ -130,6 +163,43 @@ return {
 								},
 							},
 						},
+					})
+				end,
+				["gopls"] = function()
+					lspconfig["gopls"].setup({
+						capabilities = capabilities,
+						settings = {
+							gopls = {
+								build = {
+									allowModfileModifications = false,
+									allowNetworkBuild = false,
+								},
+								formatting = {
+									gofumpt = true,
+								},
+								ui = {
+									usePlaceholders = true,
+									semanticTokens = true,
+								},
+								analyses = {
+									unusedparams = true,
+									shadow = true,
+								},
+								hints = {
+									assignVariableTypes = true,
+									compositeLiteralFields = true,
+									constantValues = true,
+									functionTypeParameters = true,
+									parameterNames = true,
+									rangeVariableTypes = true,
+								},
+							},
+						},
+					})
+				end,
+				["gdscript"] = function()
+					lspconfig["gdscript"].setup({
+						capabilities = capabilities,
 					})
 				end,
 			})

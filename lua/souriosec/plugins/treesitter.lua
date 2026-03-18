@@ -5,7 +5,7 @@ return {
 	dependencies = { "windwp/nvim-ts-autotag" },
 
 	config = function()
-		local treesitter = require("nvim-treesitter.configs")
+		local treesitter = require("nvim-treesitter.config")
 
 		treesitter.setup({
 			highlight = { enable = true },
@@ -35,7 +35,9 @@ return {
 				"terraform",
 				"gitignore",
 				"vimdoc",
+				"go",
 			},
+			auto_install = true,
 			incremental_selection = {
 				enable = true,
 				keymaps = {

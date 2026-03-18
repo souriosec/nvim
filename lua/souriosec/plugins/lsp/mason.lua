@@ -30,6 +30,7 @@ return {
 				"emmet_ls",
 				"pyright",
 				"clangd",
+				"gopls",
 			},
 		})
 
@@ -42,6 +43,7 @@ return {
 				"ruff", -- python linter
 				"eslint_d", -- js linter
 				"clang-format", -- c/cpp formatter
+				"gofumpt", -- go formatter
 			},
 		})
 	end,
