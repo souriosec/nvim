@@ -10,7 +10,6 @@ return {
 	},
 
 	config = function()
-		local lspconfig = require("lspconfig")
 		local mason_lspconfig = require("mason-lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local keymap = vim.keymap
@@ -22,7 +21,7 @@ return {
 
 				-- Enable semantic tokens highlighting
 				if client and client.server_capabilities and client.server_capabilities.semanticTokensProvider then
-					vim.lsp.semantic_tokens.start(ev.buf, client.id)
+					vim.lsp.semantic_tokens.enable(true, { bufnr = ev.buf })
 				end
 
 				local opts = { buffer = ev.buf, silent = true }
@@ -61,10 +60,14 @@ return {
 				keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
 				opts.desc = "Go to previous diagnostic"
-				keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+				keymap.set("n", "[d", function()
+					vim.diagnostic.jump({ count = -1, float = true })
+				end, opts)
 
 				opts.desc = "Go to next diagnostic"
-				keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+				keymap.set("n", "]d", function()
+					vim.diagnostic.jump({ count = 1, float = true })
+				end, opts)
 
 				opts.desc = "Show documentation for what is under cursor"
 				keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -106,103 +109,72 @@ return {
 		vim.api.nvim_set_hl(0, "@lsp.type.number", { link = "Number" })
 		vim.api.nvim_set_hl(0, "@lsp.type.operator", { link = "Operator" })
 
-		-- check if mason-lspconfig is available first
-		local mason_lspconfig_ok = pcall(require, "mason_lspconfig")
+		-- mason-lspconfig 2.0+ removed setup_handlers()/handlers in favor of the
+		-- native vim.lsp.config() / vim.lsp.enable() API. automatic_enable (on by
+		-- default) calls vim.lsp.enable() for everything in ensure_installed, so
+		-- we just need to provide per-server config via vim.lsp.config().
+		mason_lspconfig.setup({
+			ensure_installed = { "lua_ls", "gopls", "clangd", "pyright", "ts_ls", "emmet_ls" },
+		})
 
-		if mason_lspconfig_ok then
-			mason_lspconfig.setup_handlers({
-				-- default handler for installed servers
-				function(server_name)
-					lspconfig[server_name].setup({
-						capabilities = capabilities,
-					})
-				end,
-				["ts_ls"] = function()
-					lspconfig["ts_ls"].setup({
-						capabilities = capabilities,
-					})
-				end,
-				["clangd"] = function()
-					lspconfig["clangd"].setup({
-						capabilities = capabilities,
-						filetypes = { "c", "cpp" },
-						cmd = {
-							"clangd",
-							"--compile-commands-dir=build",
-						},
-					})
-				end,
-				["pyright"] = function()
-					lspconfig["pyright"].setup({
-						capabilities = capabilities,
-						settings = {
-							python = {
-								venvPath = "./",
-								venv = ".venv",
-								pythonPath = "./.venv/bin/python",
-							},
-						},
-					})
-				end,
-				["emmet_ls"] = function()
-					lspconfig["emmet_ls"].setup({
-						capabilities = capabilities,
-						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-					})
-				end,
-				["lua_ls"] = function()
-					lspconfig["lua_ls"].setup({
-						capabilities = capabilities,
-						settings = {
-							Lua = {
-								diagnostics = {
-									globals = { "vim" },
-								},
-								completion = {
-									callSnippet = "Replace",
-								},
-							},
-						},
-					})
-				end,
-				["gopls"] = function()
-					lspconfig["gopls"].setup({
-						capabilities = capabilities,
-						settings = {
-							gopls = {
-								build = {
-									allowModfileModifications = false,
-									allowNetworkBuild = false,
-								},
-								formatting = {
-									gofumpt = true,
-								},
-								ui = {
-									usePlaceholders = true,
-									semanticTokens = true,
-								},
-								analyses = {
-									unusedparams = true,
-									shadow = true,
-								},
-								hints = {
-									assignVariableTypes = true,
-									compositeLiteralFields = true,
-									constantValues = true,
-									functionTypeParameters = true,
-									parameterNames = true,
-									rangeVariableTypes = true,
-								},
-							},
-						},
-					})
-				end,
-				["gdscript"] = function()
-					lspconfig["gdscript"].setup({
-						capabilities = capabilities,
-					})
-				end,
-			})
-		end
+		-- base capabilities applied to every server, individual vim.lsp.config()
+		-- calls below are merged on top of this
+		vim.lsp.config("*", { capabilities = capabilities })
+
+		vim.lsp.config("clangd", {
+			filetypes = { "c", "cpp" },
+			cmd = {
+				"clangd",
+				"--compile-commands-dir=build",
+			},
+		})
+
+		vim.lsp.config("pyright", {
+			settings = {
+				python = {
+					venvPath = "./",
+					venv = ".venv",
+					pythonPath = "./.venv/bin/python",
+				},
+			},
+		})
+
+		vim.lsp.config("emmet_ls", {
+			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
+		})
+
+		vim.lsp.config("gopls", {
+			settings = {
+				gopls = {
+					gofumpt = true,
+					usePlaceholders = true,
+					semanticTokens = true,
+					analyses = {
+						unusedparams = true,
+						shadow = true,
+					},
+					hints = {
+						assignVariableTypes = true,
+						compositeLiteralFields = true,
+						constantValues = true,
+						functionTypeParameters = true,
+						parameterNames = true,
+						rangeVariableTypes = true,
+					},
+				},
+			},
+		})
+
+		vim.lsp.config("lua_ls", {
+			settings = {
+				Lua = {
+					diagnostics = { globals = { "vim" } },
+					workspace = {
+						library = vim.api.nvim_get_runtime_file("", true),
+						checkThirdParty = false,
+					},
+				},
+			},
+		})
 	end,
 }

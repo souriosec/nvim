@@ -1,52 +1,45 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	branch = "main",
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
-	dependencies = { "windwp/nvim-ts-autotag" },
-
 	config = function()
-		local treesitter = require("nvim-treesitter.config")
+		require("nvim-treesitter").setup({})
 
-		treesitter.setup({
-			highlight = { enable = true },
-			indent = { enable = true },
-			autotag = { enable = true },
-			ensure_installed = {
-				"html",
-				"css",
-				"typescript",
-				"javascript",
-				"tsx",
-				"lua",
-				"vim",
-				"java",
-				"c",
-				"cpp",
-				"rust",
-				"python",
-				"ron",
-				"go",
-				"bash",
-				"json",
-				"yaml",
-				"markdown",
-				"markdown_inline",
-				"dockerfile",
-				"terraform",
-				"gitignore",
-				"vimdoc",
-				"go",
-			},
-			auto_install = true,
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<C-space>",
-					node_incremental = "<C-space>",
-					scope_incremental = false,
-					node_decremental = "<bs>",
-				},
-			},
+		require("nvim-treesitter").install({
+			"html",
+			"css",
+			"typescript",
+			"javascript",
+			"tsx",
+			"lua",
+			"vim",
+			"vimdoc",
+			"java",
+			"c",
+			"cpp",
+			"rust",
+			"python",
+			"go",
+			"gomod",
+			"gosum",
+			"gowork",
+			"bash",
+			"json",
+			"yaml",
+			"markdown",
+			"markdown_inline",
+			"dockerfile",
+			"terraform",
+			"gitignore",
+			"ron",
+		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			callback = function()
+				pcall(vim.treesitter.start)
+				vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+			end,
 		})
 	end,
 }

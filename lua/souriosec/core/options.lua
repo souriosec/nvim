@@ -14,7 +14,7 @@ opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- set case sensitive search on mixed-case search
 opt.cursorline = false -- highlight the current cursor line
 opt.termguicolors = true -- colorscheme fix
-opt.background = "dark" -- set colorscheme dark background
+-- opt.background = "dark" -- set colorscheme dark background
 opt.signcolumn = "yes" -- show sign column so text doesn't shift
 opt.backspace = "indent,eol,start" -- allow backspace
 opt.clipboard:append("unnamedplus") -- use system clipboard
@@ -24,3 +24,4 @@ opt.swapfile = false -- turn of swap file
 opt.scrolloff = 15 -- scroll offset
 opt.mouse = "a"
 opt.inccommand = "split"
+opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
