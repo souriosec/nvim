@@ -1,6 +1,6 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	branch = "0.1.x",
+	branch = "master", -- no version field
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -28,6 +28,12 @@ return {
 
 		-- set keymaps
 		local keymap = vim.keymap
+		local builtin = require("telescope.builtin")
 		keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find Todo Comments" })
+		keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+		keymap.set("n", "<leader>fm", function()
+			builtin.man_pages({ sections = { "ALL" } })
+		end, { desc = "Man pages" })
+		keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Search keymaps" })
 	end,
 }
