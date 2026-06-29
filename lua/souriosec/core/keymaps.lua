@@ -22,8 +22,57 @@ keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
--- File/Image management
+-- Start: File/Image management
 keymap.set("n", "<leader>io", function()
 	local file = vim.fn.expand("<cfile>")
 	vim.fn.system('open "' .. file .. '"')
 end, { desc = "Open file or img under cursor" })
+
+keymap.set("n", "<leader>io", function()
+	local file = vim.fn.expand("<cfile>")
+	vim.fn.system('open "' .. file .. '"')
+end, { desc = "Open new note" })
+
+keymap.set("n", "<leader>nn", function()
+	-- Prompt for a file name
+	local input = vim.fn.input("Note name (empty = datetime): ")
+
+	local filename
+	if input == "" then
+		-- Generate datetime + weekday, e.g. 20260628-200810-Sunday
+		local weekdays = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
+		local weekday = weekdays[tonumber(os.date("%w")) + 1]
+		filename = os.date("%Y%m%d-%H%M%S") .. "-" .. weekday
+	else
+		-- Sanitize: replace spaces with dashes, strip unsafe chars
+		filename = input:gsub("%s+", "-"):gsub("[^%w%-_]", "")
+	end
+
+	local notes_dir = vim.fn.expand("~/Documents/notes")
+	local filepath = notes_dir .. "/" .. filename .. ".md"
+
+	-- Make sure the directory exists
+	vim.fn.mkdir(notes_dir, "p")
+
+	-- Open the file in a new buffer
+	vim.cmd("edit " .. vim.fn.fnameescape(filepath))
+
+	-- Seed the file with a title heading if it's brand new
+	if vim.fn.filereadable(filepath) == 0 then
+		local title = (input ~= "") and input or filename
+		vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+			"# " .. title,
+			"",
+		})
+		vim.cmd("normal! G") -- jump to end so cursor is ready to type
+	end
+end, { desc = "Open new note" })
+-- End: File/Image management
+
+-- Terminal Management
+vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]])
+vim.keymap.set("n", "<leader>tt", function()
+	local height = math.floor(vim.o.lines * 0.33) -- bottom 1/3
+	vim.cmd("botright " .. height .. "split | terminal") -- span full width
+	vim.cmd("startinsert") -- start in insert mode
+end, { desc = "Open terminal" })

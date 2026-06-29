@@ -11,7 +11,7 @@ return {
 					operators = false,
 					folds = false,
 				},
-				contrast = "soft", -- can be "hard", "soft" or empty string
+				contrast = "hard", -- can be "hard", "soft" or empty string
 			})
 			vim.cmd([[colorscheme gruvbox]])
 		end,
