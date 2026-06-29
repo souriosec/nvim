@@ -15,12 +15,12 @@ keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
 keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
 keymap.set("n", "<leader>sc", "<cmd>close<CR>", { desc = "Close current window" })
 
--- Window management: Tabs
-keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
-keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
-keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
-keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
-keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
+-- Window management: Buffers
+keymap.set("n", "<leader>bn", "<cmd>bnext<CR>", { desc = "Next buffer" })
+keymap.set("n", "<leader>bp", "<cmd>bprev<CR>", { desc = "Prev buffer" })
+keymap.set("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Alternate buffer (last used)" })
+keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
+keymap.set("n", "<leader>bl", "<cmd>ls<CR>", { desc = "List buffers" })
 
 -- Start: File/Image management
 keymap.set("n", "<leader>io", function()

@@ -29,11 +29,14 @@ return {
 		-- set keymaps
 		local keymap = vim.keymap
 		local builtin = require("telescope.builtin")
+
 		keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find Todo Comments" })
 		keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+		keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Recent files" })
+		keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Search keymaps" })
+
 		keymap.set("n", "<leader>fm", function()
 			builtin.man_pages({ sections = { "ALL" } })
 		end, { desc = "Man pages" })
-		keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Search keymaps" })
 	end,
 }
