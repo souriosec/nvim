@@ -24,28 +24,48 @@ return {
 					vim.lsp.semantic_tokens.enable(true, { bufnr = ev.buf })
 				end
 
+				-- ruff's hover only shows ruff rule docs; defer hover (K) to ty
+				-- so you get real type info instead.
+				if client and client.name == "ruff" then
+					client.server_capabilities.hoverProvider = false
+				end
+
 				local opts = { buffer = ev.buf, silent = true }
 
 				opts.desc = "Show workspace symbols"
-				keymap.set("n", "<leader>fw", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", opts)
+				keymap.set("n", "<leader>fw", function()
+					Snacks.picker.lsp_workspace_symbols()
+				end, opts)
 
 				opts.desc = "Show document symbols"
-				keymap.set("n", "<leader>fd", "<cmd>Telescope lsp_document_symbols<cr>", opts)
+				keymap.set("n", "<leader>fd", function()
+					Snacks.picker.lsp_symbols()
+				end, opts)
 
 				opts.desc = "Show LSP references"
-				keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
+				keymap.set("n", "gR", function()
+					Snacks.picker.lsp_references()
+				end, opts)
 
 				opts.desc = "Go to declaration"
-				keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+				keymap.set("n", "gD", function()
+					Snacks.picker.lsp_declarations()
+				end, opts)
 
 				opts.desc = "Show LSP definitions"
-				keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+				keymap.set("n", "gd", function()
+					Snacks.picker.lsp_definitions()
+				end, opts)
 
 				opts.desc = "Show LSP implementations"
-				keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+				keymap.set("n", "gi", function()
+					Snacks.picker.lsp_implementations()
+				end, opts)
 
 				opts.desc = "Show LSP type definitions"
-				keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
+				keymap.set("n", "gt", function()
+					Snacks.picker.lsp_type_definitions()
+				end, opts)
 
 				opts.desc = "See available code actions"
 				keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -54,7 +74,9 @@ return {
 				keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
 				opts.desc = "Show buffer diagnostics"
-				keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+				keymap.set("n", "<leader>D", function()
+					Snacks.picker.diagnostics_buffer()
+				end, opts)
 
 				opts.desc = "Show line diagnostics"
 				keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
@@ -113,8 +135,11 @@ return {
 		-- native vim.lsp.config() / vim.lsp.enable() API. automatic_enable (on by
 		-- default) calls vim.lsp.enable() for everything in ensure_installed, so
 		-- we just need to provide per-server config via vim.lsp.config().
+		-- NOTE: pyright removed (replaced by ty). ty is enabled explicitly below
+		-- rather than via ensure_installed here, because mason-lspconfig does not
+		-- yet reliably map/recognize ty.
 		mason_lspconfig.setup({
-			ensure_installed = { "lua_ls", "gopls", "clangd", "pyright", "ts_ls", "emmet_ls" },
+			ensure_installed = { "lua_ls", "gopls", "clangd", "ts_ls", "emmet_ls" },
 		})
 
 		-- base capabilities applied to every server, individual vim.lsp.config()
@@ -129,15 +154,40 @@ return {
 			},
 		})
 
-		vim.lsp.config("pyright", {
-			settings = {
-				python = {
-					venvPath = "./",
-					venv = ".venv",
-					pythonPath = "./.venv/bin/python",
-				},
-			},
+		-- ty (astral) replaces pyright as the Python type checker + language server.
+		-- The base config (cmd = { "ty", "server" }, filetypes, root markers) ships
+		-- with nvim-lspconfig, so this table only needs optional overrides.
+		--
+		-- No venvPath / pythonPath here: ty discovers the active environment on its
+		-- own. With uv, run nvim from a project that has a `.venv` (or with
+		-- $VIRTUAL_ENV set) and ty will resolve your dependencies automatically.
+		vim.lsp.config("ty", {
+			-- settings = {
+			-- 	ty = {
+			-- 		-- e.g. inlayHints = { variableTypes = false },
+			-- 		--      diagnosticMode = "workspace",
+			-- 	},
+			-- },
 		})
+
+		-- mason-lspconfig's automatic_enable does not reliably enable ty yet,
+		-- so enable it explicitly. The "*" capabilities above still apply.
+		vim.lsp.enable("ty")
+
+		-- ruff (astral) language server: live lint diagnostics + code actions
+		-- (autofix, organize imports on <leader>ca). This replaces the nvim-lint
+		-- ruff setup. ruff owns lint/format; ty owns types/hover/go-to-def.
+		-- The base config (cmd = { "ruff", "server" }, filetypes, root markers)
+		-- ships with nvim-lspconfig, and "*" above applies capabilities, so we
+		-- only need to enable it. Hover is turned off in the LspAttach handler
+		-- above so it doesn't compete with ty.
+		--
+		-- NOTE: do NOT pass an empty init_options.settings here. Neovim encodes an
+		-- empty Lua table as a JSON array ([]), and ruff rejects that with
+		-- "received invalid client settings - falling back to default". Only add a
+		-- vim.lsp.config("ruff", { init_options = { settings = { ... } } }) block
+		-- when settings is actually non-empty (e.g. lint = { select = {...} }).
+		vim.lsp.enable("ruff")
 
 		vim.lsp.config("emmet_ls", {
 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },

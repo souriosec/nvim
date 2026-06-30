@@ -21,6 +21,10 @@ return {
 
 		mason_lspconfig.setup({
 			-- list of servers for mason to install
+			-- NOTE: pyright removed. ty is installed via mason-tool-installer
+			-- below (as a plain package) rather than here, because mason-lspconfig
+			-- does not yet reliably recognize ty in ensure_installed /
+			-- automatic_enable. It is enabled explicitly in lspconfig.lua.
 			ensure_installed = {
 				"ts_ls",
 				"html",
@@ -28,7 +32,6 @@ return {
 				"lua_ls",
 				"graphql",
 				"emmet_ls",
-				"pyright",
 				"clangd",
 				"gopls",
 			},
@@ -38,9 +41,8 @@ return {
 			ensure_installed = {
 				"prettier", -- prettier formatter
 				"stylua", -- lua formatter
-				"isort", -- python formatter
-				"black", -- python formatter
-				"ruff", -- python linter
+				"ruff", -- python linter + formatter (astral)
+				"ty", -- python type checker / LSP (astral)
 				"eslint_d", -- js linter
 				"clang-format", -- c/cpp formatter
 				"gofumpt", -- go formatter

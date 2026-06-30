@@ -19,8 +19,6 @@ keymap.set("n", "<leader>sc", "<cmd>close<CR>", { desc = "Close current window" 
 keymap.set("n", "<leader>bn", "<cmd>bnext<CR>", { desc = "Next buffer" })
 keymap.set("n", "<leader>bp", "<cmd>bprev<CR>", { desc = "Prev buffer" })
 keymap.set("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Alternate buffer (last used)" })
-keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
-keymap.set("n", "<leader>bl", "<cmd>ls<CR>", { desc = "List buffers" })
 keymap.set("n", "<leader>bo", "<cmd>only<CR>", { desc = "Open split in new window" })
 
 -- Start: File/Image management
