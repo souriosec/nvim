@@ -8,7 +8,6 @@ return {
 		input = { enabled = true },
 		picker = { enabled = true },
 		notifier = { enabled = true },
-		statuscolumn = { enabled = true },
 		image = { enabled = true, doc = { inline = false } },
 		lazygit = { enabled = true },
 		bufdelete = { enabled = true },
