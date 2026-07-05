@@ -25,11 +25,6 @@ keymap.set("n", "<leader>bo", "<cmd>only<CR>", { desc = "Open split in new windo
 keymap.set("n", "<leader>io", function()
 	local file = vim.fn.expand("<cfile>")
 	vim.fn.system('open "' .. file .. '"')
-end, { desc = "Open file or img under cursor" })
-
-keymap.set("n", "<leader>io", function()
-	local file = vim.fn.expand("<cfile>")
-	vim.fn.system('open "' .. file .. '"')
 end, { desc = "Open new note" })
 
 keymap.set("n", "<leader>nn", function()
