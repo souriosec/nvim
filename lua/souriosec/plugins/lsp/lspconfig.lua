@@ -151,6 +151,9 @@ return {
 			cmd = {
 				"clangd",
 				"--compile-commands-dir=build",
+				"--query-driver="
+					.. vim.fn.expand("~")
+					.. "/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-*",
 			},
 		})
 
