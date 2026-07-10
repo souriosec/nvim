@@ -11,6 +11,7 @@ return {
 		image = { enabled = true, doc = { inline = false } },
 		lazygit = { enabled = true },
 		bufdelete = { enabled = true },
+		statuscolumn = { enabled = true },
 	},
 
 	keys = {
