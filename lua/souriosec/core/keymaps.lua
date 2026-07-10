@@ -9,6 +9,12 @@ keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
 
+-- Window management: Focus
+keymap.set("n", "<leader>wh", "<C-w>h", { desc = "Focus left" })
+keymap.set("n", "<leader>wl", "<C-w>l", { desc = "Focus right" })
+keymap.set("n", "<leader>wj", "<C-w>j", { desc = "Focus down" })
+keymap.set("n", "<leader>wk", "<C-w>k", { desc = "Focus up" })
+
 -- Window management: Splits
 keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
 keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })

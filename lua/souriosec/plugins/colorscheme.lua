@@ -4,14 +4,14 @@ return {
 		priority = 1000,
 		config = function()
 			require("gruvbox").setup({
-				italic = {
-					strings = false,
-					emphasis = false,
-					comments = false,
-					operators = false,
-					folds = false,
-				},
-				contrast = "hard",
+				-- italic = {
+				-- 	strings = false,
+				-- 	emphasis = false,
+				-- 	comments = false,
+				-- 	operators = false,
+				-- 	folds = false,
+				-- },
+				-- contrast = "hard",
 			})
 			vim.cmd([[colorscheme gruvbox]])
 		end,
