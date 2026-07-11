@@ -65,6 +65,13 @@ return {
 			desc = "Todo Comments",
 		},
 		{
+			"<leader>fl",
+			function()
+				Snacks.picker.lines()
+			end,
+			desc = "Search in current file",
+		},
+		{
 			"<leader>gg",
 			function()
 				Snacks.lazygit()
