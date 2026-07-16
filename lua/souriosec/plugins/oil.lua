@@ -17,11 +17,23 @@ return {
 				},
 			})
 
-			-- Open parent directory in current window
 			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
-			-- Open parent directory in floating window
-			vim.keymap.set("n", "<space>-", require("oil").toggle_float)
+			vim.keymap.set(
+				"n",
+				"<space>-",
+				require("oil").toggle_float,
+				{ desc = "Open parent directory in floating window" }
+			)
+
+			require("oil").setup({
+				keymaps = {
+					["yp"] = {
+						"actions.yank_entry",
+						desc = "Yank path of entry under cursor",
+					},
+				},
+			})
 		end,
 	},
 }
