@@ -150,10 +150,16 @@ return {
 			filetypes = { "c", "cpp" },
 			cmd = {
 				"clangd",
+				"--background-index",
+				"--clang-tidy",
+				"--header-insertion=iwyu",
+				"--completion-style=detailed",
+				"--function-arg-placeholders",
+				"--fallback-style=llvm",
+				-- Prefer project-local compile_commands.json; fall back to a build/ directory
 				"--compile-commands-dir=build",
-				"--query-driver="
-					.. vim.fn.expand("~")
-					.. "/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-*",
+				-- Optional: only keep PlatformIO query-driver on non-Windows or when needed
+				-- cmd = vim.list_extend(cmd, { "--query-driver=..." }) when appropriate
 			},
 		})
 

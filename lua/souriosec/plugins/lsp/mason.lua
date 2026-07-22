@@ -30,10 +30,8 @@ return {
 				"html",
 				"cssls",
 				"lua_ls",
-				"graphql",
 				"emmet_ls",
 				"clangd",
-				"gopls",
 			},
 		})
 
@@ -45,7 +43,7 @@ return {
 				"ty", -- python type checker / LSP (astral)
 				"eslint_d", -- js linter
 				"clang-format", -- c/cpp formatter
-				"gofumpt", -- go formatter
+				"codelldb",
 			},
 		})
 	end,
