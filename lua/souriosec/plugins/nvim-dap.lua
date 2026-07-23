@@ -73,6 +73,13 @@ return {
 				end,
 				cwd = "${workspaceFolder}",
 				stopOnEntry = false,
+
+				-- Interactive prompt for arguments
+				args = function()
+					local input = vim.fn.input("Arguments: ")
+					return vim.split(input, " +", { trimempty = true })
+				end,
+
 				-- Useful for WinAPI apps that create windows
 				-- console = "integratedTerminal",
 			},
