@@ -6,7 +6,7 @@ return {
 	opts = {
 		indent = { enabled = true, scope = { enabled = false } },
 		input = { enabled = true },
-		picker = { enabled = true },
+		picker = { enabled = true, hidden = true },
 		notifier = { enabled = true },
 		image = {
 			enabled = true,
