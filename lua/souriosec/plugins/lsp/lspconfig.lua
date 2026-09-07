@@ -139,7 +139,7 @@ return {
 		-- rather than via ensure_installed here, because mason-lspconfig does not
 		-- yet reliably map/recognize ty.
 		mason_lspconfig.setup({
-			ensure_installed = { "lua_ls", "gopls", "clangd", "ts_ls", "emmet_ls" },
+			ensure_installed = { "lua_ls", "clangd", "ts_ls", "emmet_ls" },
 		})
 
 		-- base capabilities applied to every server, individual vim.lsp.config()
@@ -200,28 +200,6 @@ return {
 
 		vim.lsp.config("emmet_ls", {
 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-		})
-
-		vim.lsp.config("gopls", {
-			settings = {
-				gopls = {
-					gofumpt = true,
-					usePlaceholders = true,
-					semanticTokens = true,
-					analyses = {
-						unusedparams = true,
-						shadow = true,
-					},
-					hints = {
-						assignVariableTypes = true,
-						compositeLiteralFields = true,
-						constantValues = true,
-						functionTypeParameters = true,
-						parameterNames = true,
-						rangeVariableTypes = true,
-					},
-				},
-			},
 		})
 
 		vim.lsp.config("lua_ls", {
