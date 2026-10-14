@@ -6,13 +6,13 @@ return {
 	---@module 'render-markdown'
 	---@type render.md.UserConfig
 	opts = {
-		render_modes = true,
-		anti_conceal = {
-			ignore = {
-				bullet = { "n" },
-				head_icon = { "n" },
-				head_background = { "n" },
-			},
-		},
+		-- render_modes = true,
+		-- anti_conceal = {
+		-- 	ignore = {
+		-- 		bullet = { "n" },
+		-- 		head_icon = { "n" },
+		-- 		head_background = { "n" },
+		-- 	},
+		-- },
 	},
 }
