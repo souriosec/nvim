@@ -1,2 +1,2 @@
-require("souriosec.core")
-require("souriosec.lazy")
+require("core")
+require("config.lazy")
